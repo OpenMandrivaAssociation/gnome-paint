@@ -13,7 +13,6 @@ Patch0:		gnome-paint.packaging.patch
 #debian patches
 Patch1:		debian-612470-handle-urls.patch
 Patch2:		lp-757607-crash-in-toolbar.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  intltool gtk2-devel desktop-file-utils
 Requires:       hicolor-icon-theme
@@ -31,22 +30,18 @@ sed -i 's|RasterGraphics;|2DGraphics;RasterGraphics;|g' data/desktop/%{name}.des
 %build
 autoreconf -fi
 %configure
-%make
+%make LIBS="-lm"
 
 
 %install 
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 # remove docs, use rpmbuild instead
-rm -rf $RPM_BUILD_ROOT/%{_prefix}/doc
+rm -rf %{buildroot}/%{_prefix}/doc
 # remove unnecessary includedir files
-rm -rf $RPM_BUILD_ROOT/%{_includedir}
+rm -rf %{buildroot}/%{_includedir}
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
-%find_lang gnome_paint
+%find_lang %{name} --all-name
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -62,11 +57,9 @@ update-desktop-database &> /dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 update-desktop-database &> /dev/null || :
 
-%files -f gnome_paint.lang
-%defattr(-,root,root,-)
+%files -f %{name}.lang
 %doc COPYING ChangeLog README
 %{_bindir}/gnome-paint
 %{_datadir}/applications/gnome-paint.desktop
 %{_datadir}/gnome-paint/
 %{_datadir}/icons/hicolor/16x16/apps/gp.png
-%{_localedir}
