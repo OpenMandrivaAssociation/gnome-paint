@@ -2,7 +2,7 @@
 
 Name:           gnome-paint
 Version:        0.4.0
-Release:        %mkrel 1
+Release:        2
 Summary:        Easy to use paint program
 
 Group:          Graphics
