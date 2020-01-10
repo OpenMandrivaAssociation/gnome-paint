@@ -22,7 +22,7 @@ gnome-paint is a simple, easy to use paint program.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 # remove icon extensions
 sed -i 's|Icon=gp.png|Icon=gp|g' data/desktop/%{name}.desktop.in.in
 sed -i 's|RasterGraphics;|2DGraphics;RasterGraphics;|g' data/desktop/%{name}.desktop.in.in
